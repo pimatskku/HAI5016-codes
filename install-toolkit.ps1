@@ -1,8 +1,6 @@
-#Requires -Version 5.1
-
-param(
-    [switch]$NoPause
-)
+if ($PSVersionTable.PSVersion.Major -lt 5 -or ($PSVersionTable.PSVersion.Major -eq 5 -and $PSVersionTable.PSVersion.Minor -lt 1)) {
+    throw "PowerShell 5.1 or newer is required."
+}
 
 # ── Configuration ────────────────────────────────────────────────────────────
 $GitName = "Your Name"
@@ -10,6 +8,12 @@ $GitEmail = "your.email@example.com"
 # ─────────────────────────────────────────────────────────────────────────────
 
 $ErrorActionPreference = "Stop"
+
+if (-not (Get-Variable -Name NoPause -Scope Script -ErrorAction SilentlyContinue)) {
+    $NoPause = $false
+}
+
+$isScriptRun = -not [string]::IsNullOrWhiteSpace($PSCommandPath)
 
 $scriptFailed = $false
 $transcriptStarted = $false
@@ -151,11 +155,11 @@ try {
         Write-Host "📝 Log file: $logFile"
     }
 
-    if (($Host.Name -eq "ConsoleHost") -and (-not $NoPause)) {
+    if (($Host.Name -eq "ConsoleHost") -and (-not $NoPause) -and $isScriptRun) {
         Read-Host "Press Enter to close this window"
     }
 
-    if ($scriptFailed) {
+    if ($scriptFailed -and $isScriptRun) {
         exit 1
     }
 }
