@@ -1,11 +1,26 @@
 #Requires -Version 5.1
 
+param(
+    [switch]$NoPause
+)
+
 # ── Configuration ────────────────────────────────────────────────────────────
 $GitName = "Your Name"
 $GitEmail = "your.email@example.com"
 # ─────────────────────────────────────────────────────────────────────────────
 
 $ErrorActionPreference = "Stop"
+
+$scriptFailed = $false
+$transcriptStarted = $false
+$logFile = Join-Path $env:TEMP ("install-toolkit-{0}.log" -f (Get-Date -Format "yyyyMMdd-HHmmss"))
+
+try {
+    Start-Transcript -Path $logFile -Force | Out-Null
+    $transcriptStarted = $true
+} catch {
+    Write-Host "⚠️ Could not start transcript logging: $($_.Exception.Message)"
+}
 
 function Test-Command {
     param([Parameter(Mandatory = $true)][string]$Name)
@@ -117,17 +132,30 @@ try {
     } else {
         Write-Host "⚠️ VS Code CLI ('code') still not available in PATH. Open VS Code manually and run: code ."
     }
+
+    Write-Host "✅ Toolkit script completed."
 } catch {
+    $scriptFailed = $true
     Write-Host ""
     Write-Host "❌ Toolkit script failed." -ForegroundColor Red
     Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
     if ($_.InvocationInfo -and $_.InvocationInfo.PositionMessage) {
         Write-Host $_.InvocationInfo.PositionMessage -ForegroundColor DarkGray
     }
+} finally {
+    if ($transcriptStarted) {
+        Stop-Transcript | Out-Null
+    }
 
-    if ($Host.Name -eq "ConsoleHost") {
+    if (Test-Path $logFile) {
+        Write-Host "📝 Log file: $logFile"
+    }
+
+    if (($Host.Name -eq "ConsoleHost") -and (-not $NoPause)) {
         Read-Host "Press Enter to close this window"
     }
 
-    exit 1
+    if ($scriptFailed) {
+        exit 1
+    }
 }
