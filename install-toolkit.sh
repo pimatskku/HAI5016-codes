@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# ── Configuration ────────────────────────────────────────────────────────────
+GIT_NAME="Your Name"
+GIT_EMAIL="your.email@example.com"
+# ─────────────────────────────────────────────────────────────────────────────
+
 # 1. Install Homebrew only if missing
 if ! command -v brew &> /dev/null; then
     echo "🍺 Installing Homebrew..."
@@ -42,8 +47,8 @@ fi
 # 5. Set Git identity ONLY if not already set
 if [ "$(git config --global user.email)" = "" ]; then
     echo "👤 Setting Git identity..."
-    git config --global user.name "Your Name"
-    git config --global user.email "your.email@example.com"
+    git config --global user.name "$GIT_NAME"
+    git config --global user.email "$GIT_EMAIL"
 else
     echo "✅ Git identity already configured: $(git config --global user.email)"
 fi
@@ -69,3 +74,7 @@ else
     echo "✅ Project directory already exists."
     cd "$PROJECT_DIR"
 fi
+
+# 8. Open project in VS Code
+echo "🚀 Opening project in VS Code..."
+code .
