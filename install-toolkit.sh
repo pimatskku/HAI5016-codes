@@ -61,7 +61,7 @@ code --install-extension ms-python.python \
      --install-extension GitHub.copilot --force
 
 # 7. Project initialization
-PROJECT_DIR=~/Developer/my-first-project
+PROJECT_DIR=~/Developer/my-first-project-2026
 if [ ! -d "$PROJECT_DIR" ]; then
     echo "📁 Creating project at $PROJECT_DIR..."
     mkdir -p "$PROJECT_DIR"
