@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # ── Configuration ────────────────────────────────────────────────────────────
 GIT_NAME="Your Name"
 GIT_EMAIL="your.email@example.com"
