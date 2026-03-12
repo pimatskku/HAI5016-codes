@@ -112,7 +112,7 @@ try {
     }
 
     # 6. Project initialization
-    $projectDir = Join-Path $HOME "Developer\my-first-project"
+    $projectDir = Join-Path $HOME "Developer\my-first-project-2026"
     if (-not (Test-Path $projectDir)) {
         Write-Host "📁 Creating project at $projectDir..."
         New-Item -ItemType Directory -Path $projectDir -Force | Out-Null
